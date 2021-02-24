@@ -5,6 +5,7 @@ import os.cmdline
 
 import telbot
 
+
 fn main () {
 	token := cmdline.option(os.args, '--token', '')
 	
