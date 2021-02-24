@@ -13,6 +13,6 @@ fn main () {
 	}
 
 	botapi := telbot.new_telbot(token)
-	res := botapi.get_me()
+	res := botapi.get_updates()
 	println(res)
 }

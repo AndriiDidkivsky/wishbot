@@ -25,6 +25,14 @@ pub fn (bot TelBot) get_me() User {
 	return decoded
 }
 
+pub fn (bot TelBot) get_updates() [] Update {
+	res := bot.make_request('getUpdates', "")
+	decoded := json.decode([] Update, res) or {
+		return []
+	}
+	return decoded
+}
+
 fn (bot TelBot) make_request(method string, body string) string {
 	res := http.post_json('${bot.endpoint}${bot.token}/${method}', body) or {
 		println("unable to send request")
@@ -47,7 +55,35 @@ fn (bot TelBot) make_request(method string, body string) string {
 
 }
 
-struct User {
+
+pub struct Update {
+	update_id int
+	message Message
+	// edited_message Message
+	// channel_post Message
+	// edited_channel_post Message
+	// inline_query InlineQuery
+	// chosen_inline_result ChosenInlineResult
+	// callback_query CallbackQuery
+	// shipping_query ShippingQuery
+	// pre_checkout_query PreCheckoutQuery
+	// poll Poll
+	// poll_answer PollAnswer
+}
+
+pub struct Message {
+	message_id int
+	from User
+	chat Chat
+	text string
+} 
+
+pub struct Chat {
+	
+}
+
+
+pub struct User {
 	pub: 
 	    id int
 		is_bot bool
