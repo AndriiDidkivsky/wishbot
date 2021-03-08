@@ -19,11 +19,16 @@ fn main () {
 		println(err)
 		panic('Cant get config')
 	}
-	println(config)
+
+	for cfg in config.sony {
+		parser.parse(cfg)
+	}
+
+	
 }
 
 
-fn get_config (path string) ?ParserConfig {
+fn get_config (path string) ?ParserConfiguration {
 	config_exists := os.exists(path)
 	
 	if !config_exists {
@@ -34,13 +39,13 @@ fn get_config (path string) ?ParserConfig {
 		return error('Cant read file')
 	}
 
-    config := json.decode(ParserConfig, config_content) or {
+    config := json.decode(ParserConfiguration, config_content) or {
 		return error(err)
 	}
 	return config
 }
 
 
-struct ParserConfig {
-	sony parser.ParserData
+struct ParserConfiguration {
+	sony []parser.ParserConfig
 }

@@ -1,18 +1,19 @@
 module parser
 
+const (
+	NOT_AVAILABLE = 'Нема в наявності'
+	PRE_PURCHASE = 'Передзамовлення'
+	AVAILABLE = 'Є в наявності'
+)
 
-pub struct ParserData {
+pub struct ParserConfig {
 	name string
 	url string
 	parser string
-	config string
 }
 
-pub struct StaticParserConfig {
-	node string
-}
-
-pub struct ParsedData {
-	prise f32
+pub struct ParsedResult {
+	name string
+	price string
 	status string
 }
