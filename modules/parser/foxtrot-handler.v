@@ -20,8 +20,8 @@ const status_map = map {
 }
 
 
-pub fn new_foxtrot_parser(name string) FoxtrotParser {
-	return FoxtrotParser{name: name}
+pub fn new_foxtrot_parser(name string, url string) FoxtrotParser {
+	return FoxtrotParser{name: name, url: url}
 }
 
 pub fn(p FoxtrotParser) handle() ParsedResult {
@@ -47,15 +47,15 @@ pub fn(p FoxtrotParser) handle() ParsedResult {
 	}
 
 	mut dom := html.parse(res.text)
+	tags := dom.get_tag_by_attribute_value('class', 'product-box__content')
 
+	if tags.len == 0 {
+		return ParsedResult{} 
+	} 
 
-	tag := dom.get_tag_by_attribute_value('class', 'product-box__content')[0]
-
+	tag := tags[0]
 	price := tag.attributes['data-price']
 	status := tag.attributes['data-availability']
-
-	println(price)
-	println(status)
 
 	return ParsedResult {
 		name: p.name,
