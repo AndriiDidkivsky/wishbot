@@ -16,15 +16,19 @@ fn main () {
 	}
 
     config := get_config(config_path) or {
-		println(err)
 		panic('Cant get config')
 	}
-
+	mut results := []parser.ParsedResult
 	for cfg in config.sony {
-		parser.parse(cfg)
+		res := parser.parse(cfg)
+		results << res
 	}
 
-	
+	println(results)
+
+	get_settings('settings.cfg') or {
+		panic('cant read settings')
+	}
 }
 
 
@@ -45,7 +49,32 @@ fn get_config (path string) ?ParserConfiguration {
 	return config
 }
 
+fn get_settings(path string) ?AppSettings {
+	settings_content := os.read_file(path) or {
+		return error('Cant read settings')
+	}
+	rows := settings_content.split('\n')
+	mut settings_map := map[string]string{}
+	for row in rows {
+		pair := row.split(':')
+		settings_map[pair[0]] = pair[1]
+	}
+
+	mut app_settings := AppSettings{
+		prepath: settings_map['prepath']
+		curpath: settings_map['curpath']
+	}
+	
+	return app_settings
+	
+}
+
 
 struct ParserConfiguration {
 	sony []parser.ParserConfig
+}
+
+struct AppSettings {
+	prepath string
+	curpath string
 }
