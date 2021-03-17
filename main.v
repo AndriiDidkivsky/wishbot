@@ -2,10 +2,16 @@ module main
 
 import os
 import os.cmdline
-
-import parser
 import json
 
+import db
+import parser
+
+const (
+	FOLDER = 'STORE'
+	PREV = 'prev'
+	CURR = 'curr'
+)
 
 fn main () {
 	token := cmdline.option(os.args, '--token', '')
@@ -25,12 +31,9 @@ fn main () {
 	}
 
 	println(results)
-
-	get_settings('settings.cfg') or {
-		panic('cant read settings')
-	}
+	dbot := db.new_db(FOLDER, PREV, CURR)
+	dbot.init()
 }
-
 
 fn get_config (path string) ?ParserConfiguration {
 	config_exists := os.exists(path)
@@ -49,32 +52,7 @@ fn get_config (path string) ?ParserConfiguration {
 	return config
 }
 
-fn get_settings(path string) ?AppSettings {
-	settings_content := os.read_file(path) or {
-		return error('Cant read settings')
-	}
-	rows := settings_content.split('\n')
-	mut settings_map := map[string]string{}
-	for row in rows {
-		pair := row.split(':')
-		settings_map[pair[0]] = pair[1]
-	}
-
-	mut app_settings := AppSettings{
-		prepath: settings_map['prepath']
-		curpath: settings_map['curpath']
-	}
-	
-	return app_settings
-	
-}
-
 
 struct ParserConfiguration {
 	sony []parser.ParserConfig
-}
-
-struct AppSettings {
-	prepath string
-	curpath string
 }
