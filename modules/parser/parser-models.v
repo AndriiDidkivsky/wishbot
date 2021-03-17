@@ -13,7 +13,8 @@ pub struct ParserConfig {
 }
 
 pub struct ParsedResult {
-	name string
-	price string
-	status string
+	pub:
+		name string
+		price string
+		status string
 }

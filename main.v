@@ -8,7 +8,7 @@ import db
 import parser
 
 const (
-	FOLDER = 'STORE'
+	FOLDER = 'store'
 	PREV = 'prev'
 	CURR = 'curr'
 )
@@ -29,10 +29,12 @@ fn main () {
 		res := parser.parse(cfg)
 		results << res
 	}
+	
 
 	println(results)
 	dbot := db.new_db(FOLDER, PREV, CURR)
 	dbot.init()
+	dbot.update(results)
 }
 
 fn get_config (path string) ?ParserConfiguration {

@@ -1,6 +1,7 @@
 module db
 
 import os
+import parser
 
 pub struct DB {
 	folder string
@@ -17,8 +18,9 @@ pub fn new_db(folder string, prev string, curr string) &DB {
 	}
 }
 
-pub fn(d DB) update() {
-
+pub fn(d DB) update(data []parser.ParsedResult) {
+	content := data.map(serialize)
+	println(content)
 }
 
 
@@ -38,5 +40,19 @@ pub fn(d DB) init() {
 		os.create(d.curr_path) or {
 			panic('cant create filte, ${err}')
 		}
+	}
+}
+
+
+fn serialize(record parser.ParsedResult) string {
+	return '${record.name};${record.price};${record.status}'
+}
+
+fn deserialize(str string) &parser.ParsedResult {
+	cols := str.split(';')
+	return &parser.ParsedResult{
+		name: cols[0],
+		price: cols[1],
+		status: cols[2]
 	}
 }
