@@ -13,14 +13,22 @@ pub struct DB {
 pub fn new_db(folder string, prev string, curr string) &DB {
 	return &DB{
 		folder: folder
-		prev_path: '${folder}/${prev}'
-		curr_path: '${folder}/${curr}'
+		prev_path: os.join_path(folder, prev)
+		curr_path: os.join_path(folder, curr)
 	}
 }
 
 pub fn(d DB) update(data []parser.ParsedResult) {
-	content := data.map(serialize)
-	println(content)
+	content := data.map(serialize).join('\n')
+	curr := os.read_file(d.curr_path) or {
+		panic('cant read file ${d.curr_path}')
+	}
+	os.write_file(d.prev_path, curr) or {
+		panic('cant write file ${d.curr_path}')
+	}
+	os.write_file(d.curr_path, content) or {
+		panic('cant write file ${d.curr_path}')
+	}
 }
 
 
@@ -42,7 +50,6 @@ pub fn(d DB) init() {
 		}
 	}
 }
-
 
 fn serialize(record parser.ParsedResult) string {
 	return '${record.name};${record.price};${record.status}'
